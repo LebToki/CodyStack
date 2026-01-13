@@ -1,138 +1,71 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import FileBrowser, { FileNode } from '../components/FileBrowser'
 import CodeEditor from '../components/CodeEditor'
 import GlassCard from '../components/GlassCard'
-import { Bot, Sparkles, X, Send, Terminal } from 'lucide-react'
-
-// ============================================
-// MOCK FILE SYSTEM
-// ============================================
-
-const mockFiles: FileNode[] = [
-    {
-        id: '1',
-        name: 'src',
-        path: 'E:\\platform\\CodyStack\\src',
-        type: 'directory',
-        children: [
-            {
-                id: '2',
-                name: 'components',
-                path: 'E:\\platform\\CodyStack\\src\\components',
-                type: 'directory',
-                children: [
-                    { id: '3', name: 'FileBrowser.tsx', path: 'E:\\platform\\CodyStack\\src\\components\\FileBrowser.tsx', type: 'file', extension: 'tsx' },
-                    { id: '4', name: 'CodeEditor.tsx', path: 'E:\\platform\\CodyStack\\src\\components\\CodeEditor.tsx', type: 'file', extension: 'tsx' },
-                    { id: '5', name: 'GlassCard.tsx', path: 'E:\\platform\\CodyStack\\src\\components\\GlassCard.tsx', type: 'file', extension: 'tsx' },
-                    { id: '6', name: 'Sidebar.tsx', path: 'E:\\platform\\CodyStack\\src\\components\\Sidebar.tsx', type: 'file', extension: 'tsx' },
-                ]
-            },
-            {
-                id: '7',
-                name: 'pages',
-                path: 'E:\\platform\\CodyStack\\src\\pages',
-                type: 'directory',
-                children: [
-                    { id: '8', name: 'Dashboard.tsx', path: 'E:\\platform\\CodyStack\\src\\pages\\Dashboard.tsx', type: 'file', extension: 'tsx' },
-                    { id: '9', name: 'IDE.tsx', path: 'E:\\platform\\CodyStack\\src\\pages\\IDE.tsx', type: 'file', extension: 'tsx' },
-                    { id: '10', name: 'Projects.tsx', path: 'E:\\platform\\CodyStack\\src\\pages\\Projects.tsx', type: 'file', extension: 'tsx' },
-                ]
-            },
-            {
-                id: '11',
-                name: 'core',
-                path: 'E:\\platform\\CodyStack\\src\\core',
-                type: 'directory',
-                children: [
-                    { id: '12', name: 'AIProviders.ts', path: 'E:\\platform\\CodyStack\\src\\core\\AIProviders.ts', type: 'file', extension: 'ts' },
-                    { id: '13', name: 'PluginSystem.ts', path: 'E:\\platform\\CodyStack\\src\\core\\PluginSystem.ts', type: 'file', extension: 'ts' },
-                ]
-            },
-            { id: '14', name: 'App.tsx', path: 'E:\\platform\\CodyStack\\src\\App.tsx', type: 'file', extension: 'tsx' },
-            { id: '15', name: 'main.tsx', path: 'E:\\platform\\CodyStack\\src\\main.tsx', type: 'file', extension: 'tsx' },
-            { id: '16', name: 'index.css', path: 'E:\\platform\\CodyStack\\src\\index.css', type: 'file', extension: 'css' },
-        ]
-    },
-    { id: '17', name: 'package.json', path: 'E:\\platform\\CodyStack\\package.json', type: 'file', extension: 'json' },
-    { id: '18', name: 'tsconfig.json', path: 'E:\\platform\\CodyStack\\tsconfig.json', type: 'file', extension: 'json' },
-    { id: '19', name: 'README.md', path: 'E:\\platform\\CodyStack\\README.md', type: 'file', extension: 'md' },
-    { id: '20', name: 'vite.config.ts', path: 'E:\\platform\\CodyStack\\vite.config.ts', type: 'file', extension: 'ts' },
-]
-
-const mockFileContents: Record<string, string> = {
-    'E:\\platform\\CodyStack\\src\\App.tsx': `import { useState } from 'react'
-import Sidebar from './components/Sidebar'
-import Dashboard from './pages/Dashboard'
-import IDE from './pages/IDE'
-
-type Page = 'dashboard' | 'ide' | 'projects'
-
-function App() {
-  const [currentPage, setCurrentPage] = useState<Page>('dashboard')
-
-  return (
-    <div className="app-layout">
-      <Sidebar currentPage={currentPage} onNavigate={setCurrentPage} />
-      <main className="main-content">
-        {/* Page content */}
-      </main>
-    </div>
-  )
-}
-
-export default App`,
-    'E:\\platform\\CodyStack\\package.json': `{
-  "name": "codystack",
-  "version": "0.1.0",
-  "description": "AI-Native IDE with Multi-Agent Orchestration",
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "react": "^18.2.0",
-    "lucide-react": "^0.294.0"
-  }
-}`,
-    'E:\\platform\\CodyStack\\README.md': `# CodyStack
-
-AI-Native IDE with Multi-Agent Orchestration
-
-## Features
-- 🤖 7 Specialized AI Agents
-- 🔌 Plugin Marketplace
-- 🎨 GlassMorphic UI
-
-## Quick Start
-\`\`\`bash
-npm install
-npm run dev
-\`\`\`
-`,
-}
+import { Bot, Sparkles, X, Send, FolderOpen, RefreshCw } from 'lucide-react'
+import { openProject, readFileContent, saveFileContent, fileSystem } from '../core/FileSystemService'
 
 // ============================================
 // COMPONENT
 // ============================================
 
 export default function IDE() {
+    const [files, setFiles] = useState<FileNode[]>([])
+    const [rootPath, setRootPath] = useState<string>('')
     const [selectedFile, setSelectedFile] = useState<FileNode | null>(null)
     const [fileContent, setFileContent] = useState('')
+    const [isLoading, setIsLoading] = useState(false)
     const [showAIPanel, setShowAIPanel] = useState(true)
     const [aiPrompt, setAiPrompt] = useState('')
+    const [hasProject, setHasProject] = useState(false)
 
-    const handleFileSelect = (file: FileNode) => {
+    const handleOpenProject = async () => {
+        setIsLoading(true)
+        const result = await openProject()
+        if (result) {
+            setFiles(result.files)
+            setRootPath(result.rootPath)
+            setHasProject(true)
+            setSelectedFile(null)
+            setFileContent('')
+        }
+        setIsLoading(false)
+    }
+
+    const handleFileSelect = async (file: FileNode) => {
+        if (file.type === 'directory') return
+
         setSelectedFile(file)
-        // Load file content (mock)
-        const content = mockFileContents[file.path] || `// ${file.name}\n// File content would be loaded here`
-        setFileContent(content)
+        setIsLoading(true)
+
+        const content = await readFileContent(file.path)
+        if (content !== null) {
+            setFileContent(content)
+        } else {
+            setFileContent(`// Could not read file: ${file.name}`)
+        }
+        setIsLoading(false)
     }
 
-    const handleSave = (content: string) => {
-        console.log(`Saving ${selectedFile?.path}:`, content)
-        // In real implementation, save to file system
+    const handleSave = async (content: string) => {
+        if (!selectedFile) return
+
+        const success = await saveFileContent(selectedFile.path, content)
+        if (success) {
+            console.log(`Saved: ${selectedFile.path}`)
+        } else {
+            console.error(`Failed to save: ${selectedFile.path}`)
+        }
     }
+
+    const handleRefresh = async () => {
+        if (!hasProject) return
+        // Re-open the project to refresh file tree
+        handleOpenProject()
+    }
+
+    // Check if File System Access API is supported
+    const isSupported = fileSystem.isSupported
 
     return (
         <div style={{
@@ -143,18 +76,55 @@ export default function IDE() {
         }}>
             {/* File Browser Panel */}
             <div style={{ width: 260, flexShrink: 0 }}>
-                <FileBrowser
-                    rootPath="E:\\platform\\CodyStack"
-                    files={mockFiles}
-                    onFileSelect={handleFileSelect}
-                    selectedFile={selectedFile?.path}
-                    onRefresh={() => console.log('Refreshing...')}
-                />
+                {hasProject ? (
+                    <FileBrowser
+                        rootPath={rootPath}
+                        files={files}
+                        onFileSelect={handleFileSelect}
+                        selectedFile={selectedFile?.path}
+                        onRefresh={handleRefresh}
+                    />
+                ) : (
+                    <div style={{
+                        height: '100%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        background: 'var(--glass-bg)',
+                        borderRight: '1px solid var(--glass-border)',
+                        padding: '24px',
+                        textAlign: 'center'
+                    }}>
+                        <FolderOpen size={48} color="var(--text-muted)" style={{ marginBottom: 16, opacity: 0.5 }} />
+                        <div style={{ fontSize: '0.9rem', marginBottom: 8, color: 'var(--text-secondary)' }}>
+                            No project open
+                        </div>
+                        <button
+                            className="btn btn--primary"
+                            onClick={handleOpenProject}
+                            disabled={!isSupported || isLoading}
+                        >
+                            <FolderOpen size={16} />
+                            {isLoading ? 'Opening...' : 'Open Folder'}
+                        </button>
+                        {!isSupported && (
+                            <div style={{
+                                fontSize: '0.75rem',
+                                color: 'var(--accent-warning)',
+                                marginTop: 12
+                            }}>
+                                ⚠️ File System API not supported in this browser.
+                                <br />Use Chrome, Edge, or Opera.
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>
 
             {/* Editor Panel */}
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-                {selectedFile ? (
+                {selectedFile && fileContent !== '' ? (
                     <CodeEditor
                         filename={selectedFile.name}
                         content={fileContent}
@@ -171,9 +141,31 @@ export default function IDE() {
                         color: 'var(--text-muted)'
                     }}>
                         <div style={{ textAlign: 'center' }}>
-                            <Sparkles size={48} style={{ marginBottom: 16, opacity: 0.5 }} />
-                            <div style={{ fontSize: '1.1rem', marginBottom: 8 }}>Select a file to start editing</div>
-                            <div style={{ fontSize: '0.85rem' }}>Or use the AI assistant to generate code</div>
+                            {isLoading ? (
+                                <>
+                                    <RefreshCw size={48} style={{ marginBottom: 16, opacity: 0.5, animation: 'spin 1s linear infinite' }} />
+                                    <div style={{ fontSize: '1.1rem' }}>Loading...</div>
+                                </>
+                            ) : hasProject ? (
+                                <>
+                                    <Sparkles size={48} style={{ marginBottom: 16, opacity: 0.5 }} />
+                                    <div style={{ fontSize: '1.1rem', marginBottom: 8 }}>Select a file to start editing</div>
+                                    <div style={{ fontSize: '0.85rem' }}>Or use the AI assistant to generate code</div>
+                                </>
+                            ) : (
+                                <>
+                                    <FolderOpen size={48} style={{ marginBottom: 16, opacity: 0.5 }} />
+                                    <div style={{ fontSize: '1.1rem', marginBottom: 8 }}>Open a project folder to begin</div>
+                                    <button
+                                        className="btn btn--primary"
+                                        onClick={handleOpenProject}
+                                        disabled={!isSupported}
+                                    >
+                                        <FolderOpen size={16} />
+                                        Open Folder
+                                    </button>
+                                </>
+                            )}
                         </div>
                     </div>
                 )}
@@ -234,14 +226,31 @@ export default function IDE() {
                                     <div>
                                         <div style={{ fontWeight: 600, marginBottom: '4px' }}>Cody</div>
                                         <div style={{ color: 'var(--text-secondary)', lineHeight: 1.5 }}>
-                                            Welcome! I'm your AI coding assistant. I can help you:
-                                            <ul style={{ margin: '8px 0', paddingLeft: '20px' }}>
-                                                <li>Write and refactor code</li>
-                                                <li>Debug issues</li>
-                                                <li>Explain complex logic</li>
-                                                <li>Generate tests</li>
-                                            </ul>
-                                            Select a file and ask me anything!
+                                            {hasProject ? (
+                                                <>
+                                                    Project <strong>{rootPath}</strong> loaded!
+                                                    <br /><br />
+                                                    Select a file to edit, or ask me to:
+                                                    <ul style={{ margin: '8px 0', paddingLeft: '20px' }}>
+                                                        <li>Explain the code</li>
+                                                        <li>Find bugs</li>
+                                                        <li>Refactor</li>
+                                                        <li>Generate tests</li>
+                                                    </ul>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    Welcome! Open a project folder to start.
+                                                    <br /><br />
+                                                    I can help you:
+                                                    <ul style={{ margin: '8px 0', paddingLeft: '20px' }}>
+                                                        <li>Write and refactor code</li>
+                                                        <li>Debug issues</li>
+                                                        <li>Explain complex logic</li>
+                                                        <li>Generate tests</li>
+                                                    </ul>
+                                                </>
+                                            )}
                                         </div>
                                     </div>
                                 </div>

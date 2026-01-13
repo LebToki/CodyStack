@@ -44,10 +44,10 @@ export const AI_PROVIDERS: Record<AIProvider, ProviderInfo> = {
         name: 'Google Gemini',
         icon: '✨',
         website: 'https://ai.google.dev',
-        models: ['gemini-2.0-flash', 'gemini-1.5-pro', 'gemini-1.5-flash'],
-        defaultModel: 'gemini-2.0-flash',
+        models: ['gemini-2.5-flash', 'gemini-2.5-pro', 'gemini-2.0-flash'],
+        defaultModel: 'gemini-2.5-flash',
         apiKeyUrl: 'https://aistudio.google.com/apikey',
-        features: ['chat', 'code', 'vision', 'multimodal']
+        features: ['chat', 'code', 'vision', 'multimodal', 'thinking']
     },
     xai: {
         id: 'xai',
