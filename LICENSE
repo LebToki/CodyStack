@@ -1,0 +1,66 @@
+CodyStack License
+
+Copyright (c) 2026 Tarek Tarabichi / 2TInteractive
+All rights reserved.
+
+This software and associated documentation files (the "Software") are the
+proprietary property of Tarek Tarabichi and 2TInteractive.
+
+TERMS AND CONDITIONS
+
+1. GRANT OF LICENSE
+   Subject to the terms of this license, you are granted a non-exclusive,
+   non-transferable, limited license to use, copy, and modify the Software
+   for personal and commercial purposes.
+
+2. ATTRIBUTION REQUIREMENT (MANDATORY)
+   Any use, distribution, or derivative work of this Software MUST include
+   clear and visible attribution to:
+   
+   - Tarek Tarabichi (https://github.com/LebToki)
+   - 2TInteractive (https://2tinteractive.com)
+   
+   This attribution must appear in:
+   - The user interface of the application (footer, about page, or sidebar)
+   - The README or documentation of any derivative work
+   - Any marketing or promotional materials
+
+3. NO REMOVAL OF BRANDING
+   The branding elements within the Software, including but not limited to:
+   - The name "CodyStack"
+   - Attribution to Tarek Tarabichi and 2TInteractive
+   - Copyright notices
+   
+   MUST NOT be removed, altered, or obscured in any distribution or
+   derivative work of this Software.
+
+4. PLUGIN DEVELOPMENT
+   Third-party developers may create plugins for the Software without
+   restriction, provided that:
+   - The core Software's branding remains intact
+   - Plugins do not remove or override the attribution requirements
+   - Plugins comply with their own licensing terms
+
+5. REDISTRIBUTION
+   Redistribution of the Software, with or without modification, is
+   permitted provided that:
+   - This license file is included in all copies
+   - Attribution requirements are maintained
+   - Branding elements are not removed
+
+6. NO WARRANTY
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+   OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT.
+
+7. LIMITATION OF LIABILITY
+   IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+   CLAIM, DAMAGES, OR OTHER LIABILITY ARISING FROM THE USE OF THE SOFTWARE.
+
+---
+
+For commercial licensing inquiries, contact:
+- GitHub: https://github.com/LebToki
+- Website: https://2tinteractive.com
+
+"Cashflow Over Clout" - 2TInteractive

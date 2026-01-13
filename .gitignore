@@ -1,0 +1,22 @@
+# Node
+node_modules/
+dist/
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Build
+*.local
+*.log
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# Testing
+coverage/

@@ -1,0 +1,33 @@
+{
+  "name": "@codystack/architect-agent",
+  "version": "1.0.0",
+  "description": "AI Architect Agent - System design expert for CodyStack",
+  "main": "index.ts",
+  "codystack": {
+    "category": "ai-agents",
+    "displayName": "Architect Agent",
+    "icon": "🏗️",
+    "activationEvents": ["onStartup"],
+    "contributes": {
+      "agents": [{
+        "id": "architect",
+        "name": "Architect",
+        "specialty": "System design, pattern selection",
+        "model": "claude-3.5-sonnet"
+      }],
+      "commands": [{
+        "id": "architect.analyze",
+        "title": "Analyze Project Structure"
+      }, {
+        "id": "architect.diagram",
+        "title": "Generate Architecture Diagram"
+      }]
+    }
+  },
+  "author": {
+    "name": "CodyStack Core",
+    "url": "https://github.com/LebToki/CodyStack"
+  },
+  "license": "MIT",
+  "keywords": ["codystack", "plugin", "ai-agent", "architecture"]
+}
