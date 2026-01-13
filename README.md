@@ -253,12 +253,16 @@ Join our growing community of developers building the future of AI-assisted codi
   <a href="https://github.com/LebToki/CodyStack/discussions">
     <img src="https://img.shields.io/badge/GitHub-Discussions-181717?style=for-the-badge&logo=github" alt="Discussions" />
   </a>
-  <a href="https://twitter.com/2abortar">
-    <img src="https://img.shields.io/badge/Twitter-Follow-1DA1F2?style=for-the-badge&logo=twitter" alt="Twitter" />
+  <a href="https://x.com/TarekTarabichi">
+    <img src="https://img.shields.io/badge/X-Follow-000000?style=for-the-badge&logo=x" alt="X" />
   </a>
-  <a href="https://github.com/LebToki">
-    <img src="https://img.shields.io/badge/GitHub-LebToki-181717?style=for-the-badge&logo=github" alt="GitHub" />
+  <a href="https://www.linkedin.com/in/tarektarabichi">
+    <img src="https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=for-the-badge&logo=linkedin" alt="LinkedIn" />
   </a>
+  <a href="https://2tinteractive.com">
+    <img src="https://img.shields.io/badge/Website-2TInteractive-FF3366?style=for-the-badge" alt="Website" />
+  </a>
+</p>
 </p>
 
 ### 🏆 Hall of Fame
